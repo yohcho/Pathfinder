@@ -10,6 +10,7 @@ function App() {
   const [algorithm,setAlgorithm] = useState("bfs")
   const [selection,setSelection] = useState("null")
   const [valid,setValid] = useState(true)
+  const [needsReset,setNeedsReset] = useState(false)
 
   const [startPos,setStartPos] = useState([])
   const [endPos,setEndPos] = useState([])
@@ -17,7 +18,6 @@ function App() {
 
   const [holdMouse,setHoldMouse] = useState(false)
 
-  const finalPath = []
   const topBar=()=>{
     return(
       <div className='maze-topbar'>
@@ -52,6 +52,7 @@ function App() {
 
   const beginPathFind=async()=>{
     setMaze(Array.from({length: 22},()=> Array.from({length: 56}, () => "none")))
+    setNeedsReset(true)
     const paths = Array.from({length: 22},()=> Array.from({length: 56}, () => " "))
     paths[startPos[0]][startPos[1]] = true
     const searchList = [startPos]
@@ -70,6 +71,7 @@ function App() {
   }
 
   const finishUp=(current,paths)=>{
+    const finalPath = []
     console.log(current)
     if(!(current[0]===endPos[0] && current[1]===endPos[1])){
       setValid(false)
@@ -135,6 +137,10 @@ function App() {
   }
 
   const handleTileClicked=(row,col,changeTo)=>{
+    if(needsReset){
+      setMaze(Array.from({length: 22},()=> Array.from({length: 56}, () => "none")))
+      setNeedsReset(false)
+    }
     if(changeTo==="null")
       return
     else if(changeTo==="🏁"){
@@ -159,7 +165,6 @@ function App() {
       return
     }
   }
-
 
   const createDisplay=()=>{
     const display = []
