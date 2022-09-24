@@ -1,0 +1,50 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.maze{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 26px;
+  height: 99vh;
+  margin-bottom: 1vh;
+  position: relative;
+}
+
+.maze-topbar{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  background-color: aqua;
+  height: 100px;
+  width: 100%;
+}
+
+.maze-topbar-options{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+}
+
+.maze-topbar-options>p{
+  margin: 0;
+}
+
+.maze-topbar-options>p:hover{
+  text-shadow: 0 0 3px #FF0000;
+}
+
+.maze-row{
+  display: flex;
+}
+
+.maze-row-tile{
+  width: 25px;
+  height: 25px;
+  border: 1px solid black;
+  font-size: 16px;
+}
