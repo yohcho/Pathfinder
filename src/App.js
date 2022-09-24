@@ -23,8 +23,10 @@ function App() {
       <div className='maze-topbar'>
         <h1>PathFinder</h1>
         <div className='maze-topbar-options'>
-          <label><input type="checkbox" checked={algorithm==="dfs"} onChange={()=>setAlgorithm("dfs")}/>DFS</label>
-          <label><input type="checkbox" checked={algorithm==="bfs"} onChange={()=>setAlgorithm("bfs")}/>BFS</label>
+          <label><input type="checkbox" checked={algorithm==="bfs"} onChange={()=>setAlgorithm("bfs")}/>Breadth First Search (BFS)</label>
+          <label><input type="checkbox" checked={algorithm==="dfs"} onChange={()=>setAlgorithm("dfs")}/>Depth First Search (DFS)</label>
+          <label><input type="checkbox" checked={false}/>Dijkstra's (coming soon)</label>
+          <label><input type="checkbox" checked={false}/>A* (coming soon)</label>
         </div>
         <div className='maze-topbar-options'>
           <p onClick={()=>setSelection("🚩")}>🚩 - Set Start Point</p>
@@ -32,9 +34,20 @@ function App() {
           <p onClick={()=>setSelection("🧱")}>🧱 - Set As Wall</p>
           <p onClick={()=>setSelection("null")}>❌ - Unselect All</p>
         </div>
-        <button onClick={beginPathFind}>Find Path</button>
+        <div className='maze-topbar-buttons'>
+          <button onClick={beginPathFind}>Find Path</button>
+          <button onClick={resetMap}>Reset Map</button>
+        </div>        
       </div>
     )
+  }
+
+  const resetMap=()=>{
+    setStartPos([])
+    setEndPos([])
+    setWalls([])
+    setMaze(Array.from({length: 22},()=> Array.from({length: 56}, () => "none")))
+    setSelection("null")
   }
 
   const beginPathFind=async()=>{
@@ -162,11 +175,11 @@ function App() {
           content = wall
         let bg = "transparent"
         if(maze[i][j]==="finalPath")
-          bg="red"
+          bg="chocolate"
         if(maze[i][j]==="searchedPath")
-          bg="green"
+          bg="aqua"
         if(maze[i][j]==="nextSearchPath")
-          bg="cyan"
+          bg="aquamarine"
         const styling = {
           backgroundColor:bg,
           backgroundImage: `url(${content})`
