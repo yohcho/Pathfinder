@@ -7,7 +7,7 @@ import wall from "./assets/wall.png"
 
 function App() {
   const [maze,setMaze] = useState(Array.from({length: 22},()=> Array.from({length: 56}, () => "none")))
-  const [algorithm,setAlgorithm] = useState("dfs")
+  const [algorithm,setAlgorithm] = useState("bfs")
   const [selection,setSelection] = useState("null")
   const [valid,setValid] = useState(true)
 
