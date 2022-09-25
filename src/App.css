@@ -16,32 +16,46 @@ html, body {
 .maze-topbar{
   position: absolute;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   top: 0;
   left: 2%;
   border: 1px solid black;
   height: 96px;
-  padding: 2px 5%;
-  width: 86%;
+  padding: 2px 1%;
+  padding-right: 1%;
+  width: 94%;
 }
 
-.maze-topbar>h1{
-  margin-right: 55%;
+.maze-topbar-section{
+  width: fit-content;
+  display: flex;
+  height: 100%;
 }
 
 .maze-topbar-options{
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   border: 1px solid black;
   height: 100%;
   margin-right: 1%;
+  width: fit-content;
 }
 
-.maze-topbar-options>p{
-  margin: 0;
+.maze-topbar-options>label{
+  padding: 0 10px;
+  width: 270px
 }
 
-.maze-topbar-options>p:hover{
+.maze-topbar-options>button{
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100px;
+}
+
+.maze-topbar-options>button:hover{
   text-shadow: 0 0 3px grey;
 }
 
