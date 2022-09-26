@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 import startFlag from "./assets/start.png"
 import endFlag from "./assets/end.png"
-import wall from "./assets/wall.png"
 
 function App() {
   const numRows = 22
@@ -45,6 +44,7 @@ function App() {
           <div className='maze-topbar-buttons'>
             <button onClick={beginPathFind}>Find Path</button>
             <button onClick={resetMap}>Reset Map</button>
+            <button onClick={generateMaze}>Create Map</button>
           </div> 
         </div>               
       </div>
@@ -57,6 +57,87 @@ function App() {
     setWalls([])
     setMaze(Array.from({length: numRows},()=> Array.from({length: numCols}, () => "none")))
     setSelection("null")
+    setData({
+      tilesDiscovered: 0,
+      success: false,
+      completed: false
+    })
+  }
+
+  const generateMaze=()=>{
+    if(ongoing)
+      return
+    resetMap()
+    setOnGoing(true)
+    const traversed = Array.from({length: numRows},()=> Array.from({length: numCols}, () => false))
+    const wallsToRemove = []
+    const start = [Math.floor(Math.random()*numRows),Math.floor(Math.random()*numCols)]
+    const searchList = [start]
+    let current = []
+    traversed[start[0]][start[1]] = true
+    while(searchList.length!==0){
+      current = searchList.shift()
+      traverseAddNeighbor(current,traversed,searchList,wallsToRemove)
+    }
+    const tempWalls = []
+    for(let i = 0; i < numRows;i++){
+      if(i%2===1){
+        for(let j = 0; j < numCols;j++){
+          const wall = `${i}-${j}`
+          if(!wallsToRemove.includes(wall))
+            tempWalls.push(wall)
+        }
+      }
+      if(i%2===0){
+        for(let j = 1; j < numCols;j+=2){
+          const wall = `${i}-${j}`
+          if(!wallsToRemove.includes(wall))
+            tempWalls.push(wall)
+        }
+      }
+    }
+    if(tempWalls.length>650)
+      generateMaze()
+    else generateMazeDisplay(tempWalls)
+  }
+
+  const traverseAddNeighbor=(current,traversed,search,wallsToRemove)=>{   
+    const possibleNeighbors = [[current[0]-2,current[1]],[current[0],current[1]+2],[current[0]+2,current[1]],[current[0],current[1]-2]]
+    for(const tile of possibleNeighbors){
+      if(potentialNextTile(tile,traversed) && Math.random()>0.2){
+        search.push(tile)
+        removeWall(current,tile,wallsToRemove)
+        traversed[tile[0]][tile[1]] = true
+      }
+    }
+  }
+
+  const removeWall=(tile1,tile2,wallsToRemove)=>{
+    const middleTile = [tile1[0]+(tile2[0]-tile1[0])/2,tile1[1]+(tile2[1]-tile1[1])/2]
+    const middleWall = `${middleTile[0]}-${middleTile[1]}`
+    wallsToRemove.push(middleWall)
+  }
+
+  const potentialNextTile=(check,traversed)=>{
+    if(check[0]<0) return false
+    if(check[1]>=traversed[0].length) return false
+    if(check[0]>=traversed.length) return false
+    if(check[1]<0) return false
+    if(traversed[check[0]][check[1]]) return false
+    return true
+  }
+
+  const generateMazeDisplay=(tempWalls)=>{
+    let index = 0
+    const genDisplay=setInterval(()=>{
+      const [row,col] = tempWalls[index].split("-")
+      handleTileClicked(parseInt(row),parseInt(col),"🧱")
+      index++
+      if(index===tempWalls.length){
+        clearInterval(genDisplay)
+        setOnGoing(false)
+      }
+    },0)
   }
 
   const traceBack=(current,paths,searchedCount,isAStar)=>{
@@ -65,7 +146,6 @@ function App() {
       success: true,
       completed: true
     }
-    console.log(metaData)
     const finalPath = []
     if(!(current[0]===endPos[0] && current[1]===endPos[1])){
       metaData.success=false
@@ -235,12 +315,12 @@ function App() {
     }
     if(changeTo==="null")
       return
-    else if(changeTo==="🏁"){
+    else if(changeTo==="🏁" && !walls.includes(`${row}-${col}`)){
       setEndPos([row,col])
       setSelection("null")
       return
     }
-    else if(changeTo==="🚩"){
+    else if(changeTo==="🚩" && !walls.includes(`${row}-${col}`)){
       setStartPos([row,col])
       setSelection("null")
       return
@@ -268,15 +348,15 @@ function App() {
           content = startFlag
         if(endPos[0]===i && endPos[1]===j)
           content = endFlag
-        if(walls.includes(`${i}-${j}`))
-          content = wall
         let bg = "transparent"
         if(maze[i][j]==="finalPath")
           bg="chocolate"
         if(maze[i][j]==="searchedPath")
-          bg="aqua"
-        if(maze[i][j]==="nextSearchPath")
           bg="aquamarine"
+        if(maze[i][j]==="nextSearchPath")
+          bg="goldenrod"
+        if(walls.includes(`${i}-${j}`))
+          bg="black"
         const styling = {
           backgroundColor:bg,
           backgroundImage: `url(${content})`

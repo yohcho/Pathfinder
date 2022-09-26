@@ -67,7 +67,7 @@ html, body {
 }
 
 .maze-topbar-buttons>button{
-  height: 48%;
+  height: auto;
 }
 
 .maze-row{
