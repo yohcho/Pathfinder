@@ -309,6 +309,8 @@ function App() {
   }
 
   const handleTileClicked=(row,col,changeTo)=>{
+    if(ongoing)
+      return
     if(needsReset){
       setMaze(Array.from({length: numRows},()=> Array.from({length: numCols}, () => "none")))
       setNeedsReset(false)
@@ -363,6 +365,7 @@ function App() {
         }
         row.push(
           <div 
+            key={j}
             style={styling} 
             className='maze-row-tile' 
             onMouseEnter={()=>{holdMouse && handleTileClicked(i,j,selection)}} 
@@ -370,7 +373,7 @@ function App() {
           </div>
         )
       }
-      display.push(<div className='maze-row'>{row}</div>)
+      display.push(<div key={i} className='maze-row'>{row}</div>)
     }
     return display
   }
